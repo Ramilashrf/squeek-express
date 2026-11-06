@@ -47,6 +47,10 @@ The leaderboard ranks profiles saved in the current browser. It is not global. S
 
 Existing v2/v3 preview progress is carried into the first local profile. No offline or hidden-tab game progression is awarded.
 
+## Privacy and saved-data safety
+
+Fonts use the device’s installed system fonts; no Google Fonts requests are made. Live mode and the stream view contact the official Squeekchain API as described above. Saved expedition names and rewards are restored from built-in definitions. Unknown or malformed expeditions are removed without resetting other valid progress, and expedition names are rendered as text. Local saves remain editable and are not trusted competition records.
+
 ## Streaming
 
 `?mode=overlay` is an independent ambient live view. It follows the real hamster but does not synchronize a player’s delivery state across OBS and browser profiles.
