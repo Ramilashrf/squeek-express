@@ -4,7 +4,7 @@ A playable pixel railway game powered by hamster movement from Squeekchain. Wake
 
 ## Run locally
 
-Requires Node.js 20 or newer. No dependency installation or build step is needed.
+Requires Node.js 22.13 or newer (Node 24 recommended). No dependency installation or build step is needed.
 
 ```sh
 npm start
@@ -19,7 +19,7 @@ npm test
 
 ## Publish
 
-Serve the contents of `dist/` from any static HTTPS host. `dist/index.html` is the entrypoint. All application imports are relative. The package does not depend on ChatGPT or its sign-in screen. Game source files are the files in `dist/`; they are hand-maintained browser modules, not generated build output.
+For the single-player game only, serve the contents of `dist/` from any static HTTPS host. For the Community Convoy, run the full Node server as described below. `dist/index.html` is the entrypoint. All application imports are relative. The package does not depend on ChatGPT or its sign-in screen. Game source files are the files in `dist/`; they are hand-maintained browser modules, not generated build output.
 
 ## Gameplay
 
@@ -67,4 +67,32 @@ Fonts use the device’s installed system fonts; no Google Fonts requests are ma
 
 ## Current limitations
 
-Single-player browser saves are editable by the player and are not suitable for competitive prizes. Global rankings and authenticated server-side progression are not implemented. Live mode depends on API availability and browser CORS access. Progress is local; clearing browser storage deletes it. Stars and owned items have no real-money, token, or NFT value.
+Single-player browser saves are editable by the player and are not suitable for competitive prizes. The separate Community Convoy uses server-owned progression and global daily rankings when the included Node backend is running; it does not synchronize the main single-player saves. Live mode depends on API availability and browser CORS access. Progress is local; clearing browser storage deletes it. Stars and owned items have no real-money, token, or NFT value.
+
+## Community Convoy (v0.4)
+
+The main game now includes an opt-in, server-backed daily challenge. Everyone contributes toward 100 deliveries per UTC day. Clover costs 20 energy, takes 35 seconds, and earns 100 points; Pine costs 30 energy, takes 55 seconds, and earns 160. Each daily shift starts with 50 energy, capped at 100. New measured official wheel work adds 0.5 energy per unit. The first reading, API recovery, installation/epoch changes and counter decreases establish a baseline without granting historical energy. Dispatch pauses when the official feed is unavailable. A dispatched train finishes according to server time, including while its player is away.
+
+The server computes timing, costs, rewards, daily totals and rankings. It never accepts client scores, browser saves, stars, claimed deadlines, or arbitrary rewards. Anonymous public reads finalize due deliveries exactly once. Practice and existing Live saves remain single-player and separate from this challenge. Top 50 daily finishers appear on the public board; ties sort by completed deliveries then stable player ID. The previous day's unfinished challenge does not carry into the new UTC day.
+
+Community identity uses a random, HttpOnly, SameSite=Strict browser cookie; only its SHA-256 hash is stored. No wallet, password or X account is needed. Names are unverified display names, can be duplicated, and are shown with a short ID. Clearing the cookie loses access to that community identity. This is not a Sybil-proof competition and must not be used to award financial prizes. Registration is limited to ten new identities per IP per hour; actions are limited per identity. Public names and daily scores are stored on the host; Hashed IP addresses are used in expiring local rate-limit records. Use one server instance and a persistent local disk. Do not expose the SQLite database through static hosting.
+
+### Run the full application
+
+**Node 22.13+ is required** for the built-in SQLite database; Node 24 is recommended. No npm dependencies are needed.
+
+```sh
+npm start
+# Production, behind an HTTPS reverse proxy:
+HOST=0.0.0.0 NODE_ENV=production COMMUNITY_DB=/persistent/community.sqlite npm start
+```
+
+`PORT` defaults to 4173. Production cookies require HTTPS. Route `/api/community/*` and static `dist/` through the same public origin. Allow outbound HTTPS to `api.squeekchain.com`. Behind a trusted reverse proxy, set `TRUST_PROXY=1` only if it overwrites incoming `X-Forwarded-For`; otherwise leave it unset. The database must be on a persistent mounted disk; ephemeral/serverless filesystem deployments lose rankings on restart. Back up the database using SQLite's backup facilities. Do not run multiple replicas against separate database copies.
+
+A Dockerfile is included. Mount a writable volume at `/app/data` owned by the container's `node` user and terminate HTTPS in front of the container.
+
+**An IPFS-only/static deployment cannot run the community server.** Its community panel explicitly shows unavailable status and does not fabricate global data; the existing game and local rankings still work. Publishing updated `dist/` to IMD alone does not activate global rankings. A persistent Node host or a separately implemented compatible backend is required before claiming a live global service.
+
+### Checks
+
+`npm run check` checks browser and server syntax. `npm test` runs the game/save tests and an actual SQLite/HTTP integration suite covering two players, forged score fields, premature claims, duplicate rewards, API failure/recovery, restart persistence, UTC rollover, rate limits, origin enforcement, and cookie flags. Deterministic API samples are injected only into automated tests; the ordinary server uses the real Squeekchain endpoint.
