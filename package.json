@@ -1,16 +1,16 @@
 {
   "name": "squeek-express",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": true,
   "description": "A hamster-powered pixel railway game for Squeekchain.",
   "type": "module",
   "engines": {
-    "node": ">=22.13"
+    "node": ">=20"
   },
   "scripts": {
     "start": "node scripts/serve.mjs",
     "dev": "node scripts/serve.mjs",
-    "test": "node check.mjs && node check-profiles.mjs && node check-community.mjs",
-    "check": "node --check dist/app.js && node --check dist/engine.mjs && node --check dist/scene.mjs && node --check dist/profiles.mjs && node --check dist/community.mjs && node --check server/community.mjs && node --check server/http.mjs"
+    "test": "node check.mjs && node check-profiles.mjs",
+    "check": "node --check dist/app.js && node --check dist/engine.mjs && node --check dist/scene.mjs && node --check dist/profiles.mjs"
   }
 }

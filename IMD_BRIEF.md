@@ -1,11 +1,11 @@
-# Squeek Express — source and deployment requirements
+# Squeek Express — static game development brief
 
 Source: https://github.com/Ramilashrf/squeek-express
 
-Preserve the existing English pixel railway game, username entry, fixed rails, crew and train perks, cargo, quests, crafting, expeditions and local save compatibility. The three advisory findings have already been fixed in source.
+Preserve the existing English pixel railway game: username entry, fixed rails with a moving train, distinct crew and locomotive perks, cargo, quests, crafting, expeditions, local profiles and local leaderboard. Live mode uses the official Squeekchain status API; Practice uses clearly marked simulation. No wallet login, global leaderboard, shared daily challenge, backend, database or recurring hosting service is requested.
 
-Version 0.4 adds a distinct Community Convoy: a 100-delivery shared daily goal and global daily leaderboard, computed by the Node/SQLite backend under server/. It uses the official live wheel data, separate server-owned energy, timed dispatch and server rewards. Practice or local-save scores must never enter the public board.
+The advisory fixes are already implemented in this repository: system fonts replace Google Fonts, stream-view wording matches the public static export, and expedition records are sanitized against trusted definitions with text-only rendering. Preserve valid saves and the regression tests.
 
-IMPORTANT: Hosting dist/ on IPFS alone does not run server/. Do not claim global rankings are live without deploying the persistent Node service, HTTPS, and a writable persistent SQLite disk. No external backend has been provisioned yet. Review this constraint with the owner before any paid deployment request. Static exports show an explicit community-unavailable state.
+For an IMD development request, perform concrete code development and testing agreed with the owner, run npm run check and npm test, and deliver the actual updated source code in a public GitHub repository. Set GitHub delivery explicitly; a review report or hosting-only job is not a code build. Publish dist/ as a static website. Do not add placeholder global data or introduce a backend.
 
-For a development job, inspect and improve the actual code, run npm run check and npm test, and deliver the updated source in a public GitHub repository with a concrete commit. A review-only or static-host-only job does not satisfy the requested code delivery. Preserve the privacy disclosures and do not invent players, prizes, finalized chain data, wallet requirements or campaign acceptance.
+IMD publication alone does not guarantee acceptance by Squeekchain. Do not open a paid job until its concrete development scope, code delivery, price and payer have been checked.
